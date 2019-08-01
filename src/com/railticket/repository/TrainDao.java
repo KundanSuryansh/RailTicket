@@ -80,7 +80,7 @@ public class TrainDao implements TrainDaoImpl {
                 break;
             }
         }
-        return 100*(count-1);
+        return 100*(count);
 
     }
 }

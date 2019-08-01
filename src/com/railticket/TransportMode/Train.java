@@ -11,6 +11,7 @@ final private int totalSeat=100;
         this.trainNumber = trainNumber;
         this.name = name;
         this.stations = stations;
+        this.availableSeat=100;
     }
 
     public int getTrainNumber() {

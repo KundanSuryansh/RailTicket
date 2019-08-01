@@ -21,7 +21,7 @@ public class Main {
         System.out.println("\n******SELECT THE PROPER OPTION******\n");
         while (true)
         {
-            System.out.println("\n  1.list all the trains   2.Search trains based on source and destination    3.Book Ticket    4.Check pnr status   5.Route of train");
+            System.out.println("\n  1.list all the trains   2.Search trains based on source and destination    3.Book Ticket    4.Check pnr status   5.Route of train  ");
             int option = sc.nextInt();
             if(option>5)
                 break;
@@ -110,6 +110,7 @@ public class Main {
             TicketDao.getInstance().save(ticket);
             train.setAvailableSeat(train.getTotalSeat()-TicketDao.getInstance().getCountOfTickets(train));
             System.out.println("Your Ticket has been booked,please note your PNR number");
+            System.out.println("Amount deducted from your account is "+ticket.getFare());
             System.out.println("********YOUR PNR NUMBER : "+ticket.getPnrNo()+" **********");
         }
     }
