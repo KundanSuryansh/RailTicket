@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a772546a-f7e9-42d2-9b42-11a39c995957" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/railticket/utility/CommandLineTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/RailTicketSystem/com/railticket/Data/TrainData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/RailTicketSystem/com/railticket/Data/TrainData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/RailTicketSystem/com/railticket/Driver/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/RailTicketSystem/com/railticket/Driver/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/RailTicketSystem/com/railticket/TransportMode/Train.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/RailTicketSystem/com/railticket/TransportMode/Train.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/railticket/Data/TrainData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/railticket/Data/TrainData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/railticket/Driver/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/railticket/Driver/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/railticket/TransportMode/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/railticket/TransportMode/Train.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/railticket/repository/TrainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/railticket/repository/TrainDao.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +30,13 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.railticket.utility" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -76,6 +78,7 @@
       <option name="presentableId" value="Default" />
       <updated>1564636037510</updated>
       <workItem from="1564636040993" duration="18688000" />
+      <workItem from="1564997464448" duration="724000" />
     </task>
     <servers />
   </component>
@@ -87,7 +90,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

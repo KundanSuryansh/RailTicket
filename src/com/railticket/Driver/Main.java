@@ -5,23 +5,31 @@ import com.railticket.TransportMode.Train;
 import com.railticket.Users.Passenger;
 import com.railticket.repository.TicketDao;
 import com.railticket.repository.TrainDao;
+import com.railticket.utility.CommandLineTable;
 import com.railticket.utility.Ticket;
-
-import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
 public class Main {
-    static Scanner sc=new Scanner(System.in);
+    private static Scanner sc=new Scanner(System.in);
     public static void main(String[] args) {
 
         TrainData trainData=new TrainData();
+
+        CommandLineTable table=new CommandLineTable();
+        table.setShowVerticalLines(true);
+        table.setHeaders("list all the trains","Search trains based on source and destination","Book Ticket","Check pnr status","Route of train");
+        table.addRow("press 1","press 2","press 3","press 4","press 5");
+
         System.out.println("\n******WELCOME TO TRAIN TICKET BOOKING SYSTEM******\n");
         System.out.println("\n******SELECT THE PROPER OPTION******\n");
+
         while (true)
         {
-            System.out.println("\n  1.list all the trains   2.Search trains based on source and destination    3.Book Ticket    4.Check pnr status   5.Route of train  ");
+            System.out.println("\n");
+            table.print();
+            System.out.println("\n");
             int option = sc.nextInt();
             if(option>5)
                 break;
@@ -29,47 +37,46 @@ public class Main {
         }
 
     }
-    public static void chooseOption(int option)
+    private static void chooseOption(int option)
     {
         switch (option)
         {
             case 1: listAllTrains();
-                    break;
+                break;
             case 2: searchTrains();
-                    break;
+                break;
             case 3: bookTicket();
-                    break;
+                break;
             case 4: checkPnrStatus();
-                    break;
+                break;
             case 5: routeOftrain();
-                    break;
+                break;
 
         }
     }
-    public static void listAllTrains()
+    private static void listAllTrains()
     {
         Set<Train> trains=TrainDao.getInstance().getAllTrains();
-        System.out.println("Train Number"+"  "+"Train Name"+"    "+"Source"+"    "+"Destination"+"  "+"Total Seat"+"  "+"Available Seat");
+        CommandLineTable table=new CommandLineTable();
+        table.setShowVerticalLines(true);
+        table.setHeaders("Train Number","Train Name","Source","Destination","Total Seat","Available Seat");
         for(Train t:trains)
         {
-            System.out.println("       "+t.getTrainNumber()+"        "+t.getName()+"     "+t.getStations()[0]+"         "+t.getStations()[t.getStations().length-1]+"         "+t.getTotalSeat()+"          "+t.getAvailableSeat());
+            table.addRow(String.valueOf(t.getTrainNumber()),t.getName(),t.getStations()[0],t.getStations()[t.getStations().length-1],String.valueOf(t.getTotalSeat()),String.valueOf(t.getAvailableSeat()));
         }
+        table.print();
     }
-    public static void searchTrains()
+    private static void searchTrains()
     {
         System.out.print("enter the source station :");
         String source=sc.next();
         System.out.print("enter the destination station :");
         String destination=sc.next();
         Set<Train> trains=TrainDao.getInstance().searchTrain(source,destination);
-        System.out.println("Train Number"+"    "+"Train Name"+"     "+"Total Seat"+"  "+"Available Seat");
-        for(Train t:trains)
-        {
-            System.out.println("    "+t.getTrainNumber()+"        "+t.getName()+"         "+t.getTotalSeat()+"          "+t.getAvailableSeat());
-        }
+        printTable(trains);
 
     }
-    public static void bookTicket()
+    private static void bookTicket()
     {
         System.out.println("***********ENTER YOUR DETAILS***********\n");
         System.out.print("Name : ");
@@ -91,30 +98,33 @@ public class Main {
         {
             System.out.println("List of trains between the given source and destination are :");
             System.out.println("Train Number"+"    "+"Train Name"+"     "+"Total Seat"+"  "+"Available Seat");
-            for(Train t:trains)
-            {
-                System.out.println("    "+t.getTrainNumber()+"        "+t.getName()+"         "+t.getTotalSeat()+"          "+t.getAvailableSeat());
-            }
+            printTable(trains);
             System.out.println("select the train number for ticket booking");
             int trainNo=sc.nextInt();
             Train train=TrainDao.getInstance().getTrainByTrainNo(trainNo);
-            Passenger passenger=new Passenger(age,name,gender.charAt(0));
-            Random random=new Random();
-            int pnrNo=random.nextInt(1000);
-            while(TicketDao.getInstance().checkPnrDuplicaton(pnrNo))
+            if(train.getAvailableSeat()!=0)
             {
-                pnrNo=random.nextInt(1000);
+                Passenger passenger = new Passenger(age, name, gender.charAt(0));
+                Random random = new Random();
+                int pnrNo = random.nextInt(1000);
+                while (TicketDao.getInstance().checkPnrDuplicaton(pnrNo)) {
+                    pnrNo = random.nextInt(1000);
+                }
+                int fare = TrainDao.getInstance().fare(source, destination, train);
+                Ticket ticket = new Ticket(pnrNo, source, destination, fare, passenger, train);
+                TicketDao.getInstance().save(ticket);
+                train.setAvailableSeat(train.getTotalSeat() - TicketDao.getInstance().getCountOfTickets(train));
+                System.out.println("Your Ticket has been booked,please note your PNR number");
+                System.out.println("Amount deducted from your account is " + ticket.getFare());
+                System.out.println("********YOUR PNR NUMBER : " + ticket.getPnrNo() + " **********");
             }
-            int fare=TrainDao.getInstance().fare(source,destination,train);
-            Ticket ticket=new Ticket(pnrNo,source,destination,fare,passenger,train);
-            TicketDao.getInstance().save(ticket);
-            train.setAvailableSeat(train.getTotalSeat()-TicketDao.getInstance().getCountOfTickets(train));
-            System.out.println("Your Ticket has been booked,please note your PNR number");
-            System.out.println("Amount deducted from your account is "+ticket.getFare());
-            System.out.println("********YOUR PNR NUMBER : "+ticket.getPnrNo()+" **********");
+            else
+            {
+                System.out.println("There are no available seats present in "+train.getName()+" Express");
+            }
         }
     }
-    public static void checkPnrStatus()
+    private static void checkPnrStatus()
     {
         System.out.print("Enter the pnr No:");
         int pnr=sc.nextInt();
@@ -128,17 +138,28 @@ public class Main {
             System.out.println("your ticket has been confirmed already for train number "+ticket.getTrain().getTrainNumber()+" from "+ticket.getFromStation()+" to "+ticket.getToStation());
         }
     }
-    public static void routeOftrain()
+    private static void routeOftrain()
     {
         System.out.print("enter the Train number : ");
         int trainNo=sc.nextInt();
         Train train=TrainDao.getInstance().getTrainByTrainNo(trainNo);
         System.out.print("Start"+" ----> ");
-        for(String s:train.getStations())
-        {
-            System.out.print(s+" ----> ");
+        for(String s:train.getStations()) {
+            System.out.print(s + " ----> ");
         }
         System.out.println("Stop");
+    }
+    private static void printTable(Set<Train> trains)
+    {
+        CommandLineTable table=new CommandLineTable();
+        table.setShowVerticalLines(true);
+        table.setHeaders("Train Number","Train Name","Total Seat","Available Seat");
+        for(Train train:trains)
+        {
+            table.addRow(String.valueOf(train.getTrainNumber()),train.getName(),String.valueOf(train.getTotalSeat()),String.valueOf(train.getAvailableSeat()));
+        }
+        table.print();
+        System.out.println("\n\n");
     }
 
 

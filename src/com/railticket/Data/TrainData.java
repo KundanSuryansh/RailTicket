@@ -17,5 +17,9 @@ public class TrainData {
         String[] shatabdiStations=new String[]{"delhi","gurgaon","lucknow","kanpur","mughalsarai","aasansol","durgapur"};
         Train shatabdi=new Train(3,"shatabdi",shatabdiStations);
         TrainDao.getInstance().save(shatabdi);
+
+        String[] shramjeeviStations=new String[]{"rajgir","patna","danapur","ara","buxar","mughalsarai","varanasi","illahabad","lucknow","gurgaon","delhi"};
+        Train shramjeevi=new Train(4,"shramjeevi",shramjeeviStations);
+        TrainDao.getInstance().save(shramjeevi);
     }
 }
