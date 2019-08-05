@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class Main{
     private static Scanner sc=new Scanner(System.in);
-    private static boolean success = false;
+
     public static void main(String[] args) {
 
         TrainData trainData=new TrainData();
@@ -35,7 +35,6 @@ public class Main{
 
         System.out.println("\n******WELCOME TO TRAIN TICKET BOOKING SYSTEM******\n");
         System.out.println("\n******SELECT THE PROPER OPTION******\n");
-
         while (true)
         {
             System.out.println("\n");
@@ -44,7 +43,7 @@ public class Main{
 
 
             int option=-1;
-
+            boolean success = false;
             while (!success) {
                 try {
                     System.out.print("Enter an option: ");
@@ -106,14 +105,16 @@ public class Main{
         {
             System.out.println("no any trains available for given location.");
         }
-        printTable(trains);
+        else {
+            printTable(trains);
+        }
 
     }
     private static void bookTicket()
     {
         System.out.println("***********ENTER YOUR DETAILS***********\n");
 
-        success = false;
+        boolean success = false;
         String name=null,gender=null,source=null,destination=null;
         int age=0;
 
