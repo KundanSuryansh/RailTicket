@@ -5,7 +5,9 @@ import com.railticket.utility.Ticket;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-
+/** this is Singleton class,which is holding all the Tickets in from of Set
+ *
+ * **/
 public class TicketDao implements TicketDaoImpl {
     LinkedHashSet<Ticket> ticketContainer=new LinkedHashSet<Ticket>();
     private static TicketDao SINGLE_INSTANCE=null;
@@ -48,8 +50,9 @@ public class TicketDao implements TicketDaoImpl {
         return ticketContainer;
     }
 
+
     @Override
-    public Set<Ticket> getTicketByTrain(Train train) {
+    public Set<Ticket> getTicketByTrain(Train train) { //it returns set of all ticket object of specified train.
         LinkedHashSet<Ticket> filterTicketContainer=new LinkedHashSet<Ticket>();
         for(Ticket ticket:ticketContainer)
         {
@@ -62,7 +65,7 @@ public class TicketDao implements TicketDaoImpl {
     }
 
     @Override
-    public Ticket getTicketByPnr(int pnrNo) {
+    public Ticket getTicketByPnr(int pnrNo) { //it return Ticket object if the given pnr is matched with any ticket present in set.
         for(Ticket ticket:ticketContainer)
         {
             if(ticket.getPnrNo()==pnrNo)
@@ -74,7 +77,7 @@ public class TicketDao implements TicketDaoImpl {
     }
 
     @Override
-    public int getCountOfTickets(Train train) {
+    public int getCountOfTickets(Train train) { // it returns tottal number of ticket got booked in specified train.
         int count=0;
         for (Ticket ticket:ticketContainer)
         {

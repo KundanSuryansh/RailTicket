@@ -1,26 +1,37 @@
 package com.railticket.Driver;
 
 import com.railticket.Data.TrainData;
+import com.railticket.Exceptions.NoAnyOptionMatchException;
 import com.railticket.TransportMode.Train;
 import com.railticket.Users.Passenger;
 import com.railticket.repository.TicketDao;
 import com.railticket.repository.TrainDao;
 import com.railticket.utility.CommandLineTable;
 import com.railticket.utility.Ticket;
+
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Main {
+/** this  is driver class
+ * from where the execution begins..
+ *
+ * Kundan Suryansh
+ *
+ * **/
+
+public class Main{
     private static Scanner sc=new Scanner(System.in);
+    private static boolean success = false;
     public static void main(String[] args) {
 
         TrainData trainData=new TrainData();
 
-        CommandLineTable table=new CommandLineTable();
+        CommandLineTable table=new CommandLineTable(); //to print statements in tabular format.
         table.setShowVerticalLines(true);
-        table.setHeaders("list all the trains","Search trains based on source and destination","Book Ticket","Check pnr status","Route of train");
-        table.addRow("press 1","press 2","press 3","press 4","press 5");
+        table.setHeaders("list all the trains","Search trains based on source and destination","Book Ticket","Check pnr status","Route of train","Exit");
+        table.addRow("press 1","press 2","press 3","press 4","press 5","press 6");
 
         System.out.println("\n******WELCOME TO TRAIN TICKET BOOKING SYSTEM******\n");
         System.out.println("\n******SELECT THE PROPER OPTION******\n");
@@ -30,8 +41,26 @@ public class Main {
             System.out.println("\n");
             table.print();
             System.out.println("\n");
-            int option = sc.nextInt();
-            if(option>5)
+
+
+            int option=-1;
+
+            while (!success) {
+                try {
+                    System.out.print("Enter an option: ");
+                    option = sc.nextInt();
+                    if(option>6)
+                    {
+                        throw new NoAnyOptionMatchException();
+                    }
+                    success = true;
+                } catch (InputMismatchException | NoAnyOptionMatchException e) {
+                    sc.nextLine();
+                    System.out.println("You have entered an invalid option");
+                }
+            }
+
+            if(option==6)
                 break;
             chooseOption(option);
         }
@@ -73,22 +102,43 @@ public class Main {
         System.out.print("enter the destination station :");
         String destination=sc.next();
         Set<Train> trains=TrainDao.getInstance().searchTrain(source,destination);
+        if(trains.isEmpty())
+        {
+            System.out.println("no any trains available for given location.");
+        }
         printTable(trains);
 
     }
     private static void bookTicket()
     {
         System.out.println("***********ENTER YOUR DETAILS***********\n");
-        System.out.print("Name : ");
-        String name=sc.next();
-        System.out.print("Age : ");
-        int age=sc.nextInt();
-        System.out.print("Gender : ");
-        String gender=sc.next();
-        System.out.print("Source : ");
-        String source=sc.next();
-        System.out.print("Destination : ");
-        String destination=sc.next();
+
+        success = false;
+        String name=null,gender=null,source=null,destination=null;
+        int age=0;
+
+        while (!success) {
+            try {
+                System.out.print("Name : ");
+                name = sc.next();
+                System.out.print("Age : ");
+                age = sc.nextInt();
+                System.out.print("Gender (Male or Female): ");
+                gender = sc.next();
+                System.out.print("Source : ");
+                source = sc.next();
+                System.out.print("Destination : ");
+                destination = sc.next();
+                success = true;
+            }
+            catch (InputMismatchException e)
+            {
+                sc.nextLine();
+                System.out.println("One or more information given above may not be in appropriate format.");
+            }
+        }
+
+
         Set<Train> trains=TrainDao.getInstance().searchTrain(source,destination);
         if(trains.isEmpty())
         {
@@ -100,7 +150,22 @@ public class Main {
             System.out.println("Train Number"+"    "+"Train Name"+"     "+"Total Seat"+"  "+"Available Seat");
             printTable(trains);
             System.out.println("select the train number for ticket booking");
-            int trainNo=sc.nextInt();
+
+            success = false;
+            int trainNo=0;
+            while (!success) {
+                try {
+                    trainNo = sc.nextInt();
+                    success=true;
+                    }
+                catch (InputMismatchException e)
+                {
+                    sc.nextLine();
+                    System.out.println("Invalid Train number");
+                }
+            }
+
+
             Train train=TrainDao.getInstance().getTrainByTrainNo(trainNo);
             if(train.getAvailableSeat()!=0)
             {
@@ -124,6 +189,7 @@ public class Main {
             }
         }
     }
+
     private static void checkPnrStatus()
     {
         System.out.print("Enter the pnr No:");
@@ -138,6 +204,7 @@ public class Main {
             System.out.println("your ticket has been confirmed already for train number "+ticket.getTrain().getTrainNumber()+" from "+ticket.getFromStation()+" to "+ticket.getToStation());
         }
     }
+
     private static void routeOftrain()
     {
         System.out.print("enter the Train number : ");
@@ -149,6 +216,7 @@ public class Main {
         }
         System.out.println("Stop");
     }
+
     private static void printTable(Set<Train> trains)
     {
         CommandLineTable table=new CommandLineTable();
@@ -161,8 +229,4 @@ public class Main {
         table.print();
         System.out.println("\n\n");
     }
-
-
-
-
 }

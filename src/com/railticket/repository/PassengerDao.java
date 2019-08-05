@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.railticket.Users.Passenger;
-
+/** this is Singleton class,which is holding all the passengers details in from of arraylist
+ *
+ * **/
 public class PassengerDao implements PassengerDaoImp {
 
 	ArrayList<Passenger> passengers=new ArrayList<Passenger>();

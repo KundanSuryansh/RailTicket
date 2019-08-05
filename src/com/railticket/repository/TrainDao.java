@@ -4,7 +4,9 @@ import com.railticket.TransportMode.Train;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-
+/** this is Singleton class,which is holding all the Trains in from of Set.
+ *
+ * **/
 public class TrainDao implements TrainDaoImpl {
 
     LinkedHashSet<Train> trainContainer=new LinkedHashSet<Train>();
@@ -29,19 +31,14 @@ public class TrainDao implements TrainDaoImpl {
         {
             String[] stations =train.getStations();
             int temp=0;
-            for(String station : stations)
-            {
-                if(station.equals(source) || station.equals(destination))
-                {
+            for(String station : stations) {
+                if (station.equals(source) || station.equals(destination)) {
                     temp++;
                 }
-                if(temp==2)
-                {
+                if (temp == 2) {
                     filterTrainContainer.add(train);
                 }
             }
-
-
         }
         return filterTrainContainer;
     }
