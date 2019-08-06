@@ -13,4 +13,5 @@ public interface TicketDaoImpl {
     public void save(Ticket ticket);
     public int getCountOfTickets(Train train);
     public Ticket getTicketByPnr(int pnrNo);
+    public boolean removeTicket(Ticket ticket);
 }

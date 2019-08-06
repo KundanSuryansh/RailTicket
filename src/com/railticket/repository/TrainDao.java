@@ -1,6 +1,7 @@
 package com.railticket.repository;
 
 import com.railticket.TransportMode.Train;
+import com.railticket.utility.Ticket;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -79,5 +80,17 @@ public class TrainDao implements TrainDaoImpl {
         }
         return 100*(count);
 
+    }
+
+    @Override
+    public Train getTrainByTicket(Ticket ticket) {
+        for(Train train :trainContainer)
+        {
+            if(train.getTrainNumber()==ticket.getTrain().getTrainNumber())
+            {
+                return train;
+            }
+        }
+            return null;
     }
 }

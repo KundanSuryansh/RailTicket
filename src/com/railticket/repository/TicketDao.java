@@ -88,4 +88,9 @@ public class TicketDao implements TicketDaoImpl {
         }
         return count;
     }
+
+    @Override
+    public boolean removeTicket(Ticket ticket) {
+        return ticketContainer.remove(ticket);
+    }
 }

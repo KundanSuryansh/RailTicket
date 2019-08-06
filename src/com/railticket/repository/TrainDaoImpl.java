@@ -1,6 +1,7 @@
 package com.railticket.repository;
 
 import com.railticket.TransportMode.Train;
+import com.railticket.utility.Ticket;
 
 import java.util.Set;
 
@@ -10,4 +11,5 @@ public interface TrainDaoImpl {
     public void save(Train train);
     public Train getTrainByTrainNo(int trainNo);
     public int fare(String source,String Destination,Train train);
+    public Train getTrainByTicket(Ticket ticket);
 }
