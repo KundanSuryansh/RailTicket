@@ -1,6 +1,7 @@
 package com.railticket.Driver;
 
 import com.railticket.Data.TrainData;
+import com.railticket.Exceptions.NegativeTrainNumberException;
 import com.railticket.Exceptions.NoAnyOptionMatchException;
 import com.railticket.TransportMode.Train;
 import com.railticket.Users.Passenger;
@@ -48,7 +49,7 @@ public class Main{
                 try {
                     System.out.print("Enter an option: ");
                     option = sc.nextInt();
-                    if(option>6)
+                    if(option>6 || option<=0)
                     {
                         throw new NoAnyOptionMatchException();
                     }
@@ -59,8 +60,9 @@ public class Main{
                 }
             }
 
-            if(option==6)
+            if(option==6) {
                 break;
+            }
             chooseOption(option);
         }
 
@@ -138,8 +140,6 @@ public class Main{
                 System.out.println("One or more information given above may not be in appropriate format.");
             }
         }
-
-
         Set<Train> trains=TrainDao.getInstance().searchTrain(source,destination);
         if(trains.isEmpty())
         {
@@ -148,49 +148,40 @@ public class Main{
         else
         {
             System.out.println("List of trains between the given source and destination are :");
-            System.out.println("Train Number"+"    "+"Train Name"+"     "+"Total Seat"+"  "+"Available Seat");
             printTable(trains);
             System.out.println("select the train number for ticket booking");
-
-            success = false;
-            int trainNo=0;
-            while (!success) {
-                try {
-                    trainNo = sc.nextInt();
-                    success=true;
-                    }
-                catch (InputMismatchException e)
-                {
-                    sc.nextLine();
-                    System.out.println("Invalid Train number");
-                }
-            }
-
-
-            Train train=TrainDao.getInstance().getTrainByTrainNo(trainNo);
-            if(train.getAvailableSeat()!=0)
+            Train train=inputTrainNo();
+            if(train!=null)
             {
-                Passenger passenger = new Passenger(age, name, gender.charAt(0));
-                Random random = new Random();
-                int pnrNo = random.nextInt(1000);
-                while (TicketDao.getInstance().checkPnrDuplicaton(pnrNo)) {
-                    pnrNo = random.nextInt(1000);
+                if(train.getAvailableSeat()!=0)
+                {
+                    Passenger passenger = new Passenger(age, name, gender.charAt(0));
+                    Random random = new Random();
+                    int pnrNo = random.nextInt(1000);
+                    while (TicketDao.getInstance().checkPnrDuplicaton(pnrNo)) {
+                        pnrNo = random.nextInt(1000);
+                    }
+                    int fare = TrainDao.getInstance().fare(source, destination, train);
+                    Ticket ticket = new Ticket(pnrNo, source, destination, fare, passenger, train);
+                    TicketDao.getInstance().save(ticket);
+                    train.setAvailableSeat(train.getTotalSeat() - TicketDao.getInstance().getCountOfTickets(train));
+                    System.out.println("Your Ticket has been booked,please note your PNR number");
+                    System.out.println("Amount deducted from your account is " + ticket.getFare());
+                    System.out.println("********YOUR PNR NUMBER : " + ticket.getPnrNo() + " **********");
                 }
-                int fare = TrainDao.getInstance().fare(source, destination, train);
-                Ticket ticket = new Ticket(pnrNo, source, destination, fare, passenger, train);
-                TicketDao.getInstance().save(ticket);
-                train.setAvailableSeat(train.getTotalSeat() - TicketDao.getInstance().getCountOfTickets(train));
-                System.out.println("Your Ticket has been booked,please note your PNR number");
-                System.out.println("Amount deducted from your account is " + ticket.getFare());
-                System.out.println("********YOUR PNR NUMBER : " + ticket.getPnrNo() + " **********");
+                else
+                {
+                    System.out.println("There are no available seats present in "+train.getName()+" Express");
+                }
             }
             else
             {
-                System.out.println("There are no available seats present in "+train.getName()+" Express");
+                System.out.println("Invalid Train number selected!..Try Again..");
             }
+
         }
     }
-
+ 
     private static void checkPnrStatus()
     {
         System.out.print("Enter the pnr No:");
@@ -209,13 +200,18 @@ public class Main{
     private static void routeOftrain()
     {
         System.out.print("enter the Train number : ");
-        int trainNo=sc.nextInt();
-        Train train=TrainDao.getInstance().getTrainByTrainNo(trainNo);
-        System.out.print("Start"+" ----> ");
-        for(String s:train.getStations()) {
-            System.out.print(s + " ----> ");
+        Train train=inputTrainNo();
+        if(train==null)
+        {
+            System.out.println("No such train number found.");
         }
-        System.out.println("Stop");
+        else {
+            System.out.print("Start" + " ----> ");
+            for (String s : train.getStations()) {
+                System.out.print(s + " ----> ");
+            }
+            System.out.println("Stop");
+        }
     }
 
     private static void printTable(Set<Train> trains)
@@ -229,5 +225,23 @@ public class Main{
         }
         table.print();
         System.out.println("\n\n");
+    }
+    private static Train inputTrainNo()
+    {
+        boolean success = false;
+        Train train;
+        int trainNo=0;
+        while (!success) {
+            try {
+                trainNo = sc.nextInt();
+                success = true;
+            } catch (InputMismatchException | NegativeTrainNumberException e) {
+                sc.nextLine();
+                System.out.println("Invalid Train number");
+                System.out.println("enter the proper train no : ");
+            }
+        }
+        train = TrainDao.getInstance().getTrainByTrainNo(trainNo);
+        return train;
     }
 }
