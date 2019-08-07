@@ -1,6 +1,7 @@
 package com.railticket.repository;
 
 import com.railticket.TransportMode.Train;
+import com.railticket.Users.Passenger;
 import com.railticket.utility.Ticket;
 
 import java.util.Set;
@@ -14,4 +15,5 @@ public interface TicketDaoImpl {
     public int getCountOfTickets(Train train);
     public Ticket getTicketByPnr(int pnrNo);
     public boolean removeTicket(Ticket ticket);
+    public  Set<Ticket> getTicketsByPassenger(Passenger passenger);
 }

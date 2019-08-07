@@ -1,6 +1,7 @@
 package com.railticket.repository;
 
 import com.railticket.TransportMode.Train;
+import com.railticket.Users.Passenger;
 import com.railticket.utility.Ticket;
 
 import java.util.LinkedHashSet;
@@ -92,5 +93,18 @@ public class TicketDao implements TicketDaoImpl {
     @Override
     public boolean removeTicket(Ticket ticket) {
         return ticketContainer.remove(ticket);
+    }
+
+    @Override
+    public Set<Ticket> getTicketsByPassenger(Passenger passenger) {
+        LinkedHashSet<Ticket> filterTicketContainer=new LinkedHashSet<Ticket>();
+        for(Ticket ticket :ticketContainer)
+        {
+            if(ticket.getPassenger().getPassengerId()==passenger.getPassengerId())
+            {
+                filterTicketContainer.add(ticket);
+            }
+        }
+        return filterTicketContainer;
     }
 }
